@@ -26,11 +26,13 @@
                 </div>
                 <!-- end page title -->
                 @if (session('success'))
-                    <x-alert type="success">
-                        {{ session('success') }}</x-alert> />
-                @else
-                    <x-alert type="danger">
-                        {{ session('error') }}</x-alert>
+                    <div class="alert alert-success" role="alert">
+                        <strong> {{ session('success') }} </strong>
+                    </div>
+                @elseif(session('error'))
+                    <div class="alert alert-danger" role="alert">
+                        <strong> {{ session('error') }} </strong>
+                    </div>
                 @endif
                 <form id="createproduct-form" autocomplete="off" class="needs-validation"
                     action="{{ route('product.store') }}" method="POST">

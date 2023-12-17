@@ -15,30 +15,7 @@ use App\Http\Controllers\ProductController;
 |
 */
 
-Route::get('/', function () {
-    $salesToday = DB::table('sales')
-        ->whereDate('sale_date', Carbon::today())
-        ->sum('total_amount');
-
-    $salesYesterday = DB::table('sales')
-        ->whereDate('sale_date', Carbon::yesterday())
-        ->sum('total_amount');
-
-    $salesThisMonth = DB::table('sales')
-        ->whereMonth('sale_date', Carbon::now()->month)
-        ->sum('total_amount');
-    $salesLastMonth = DB::table('sales')
-        ->whereMonth('sale_date', Carbon::now()->subMonth()->month)
-        ->sum('total_amount');
-
-    return view('pages.dashboard', [
-        'salesToday' => $salesToday,
-        'salesYesterday' => $salesYesterday,
-        'salesThisMonth' => $salesThisMonth,
-        'salesLastMonth' => $salesLastMonth,
-    ]);
-
-})->name('dashboard');
+Route::get('/', [ProductController::class, 'dashboard'])->name('dashboard');
 Route::get('/product', [ProductController::class, 'index'])->name('product');
 Route::get('/sales', [ProductController::class, 'sales'])->name('sales');
 Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');

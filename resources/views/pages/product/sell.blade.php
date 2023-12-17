@@ -4,9 +4,7 @@
 
 @section('content')
     <div class="main-content" x-data="{ quantity: 0, price: {{ $product->price }}, total: 0, productQuantity: {{ $product->quantity }}, message: '' }" x-init="$watch('quantity', () => total = price * quantity)">
-        <div class="alert alert-danger" x-show="message" role="alert">
-            <strong x-text="message"> </strong>
-        </div>
+
         <div class="page-content">
             <div class="container-fluid">
 

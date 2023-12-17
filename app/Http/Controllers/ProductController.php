@@ -3,10 +3,35 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
+    public function dashboard()
+    {
+        $salesToday = DB::table('sales')
+            ->whereDate('sale_date', Carbon::today())
+            ->sum('total_amount');
+
+        $salesYesterday = DB::table('sales')
+            ->whereDate('sale_date', Carbon::yesterday())
+            ->sum('total_amount');
+
+        $salesThisMonth = DB::table('sales')
+            ->whereMonth('sale_date', Carbon::now()->month)
+            ->sum('total_amount');
+        $salesLastMonth = DB::table('sales')
+            ->whereMonth('sale_date', Carbon::now()->subMonth()->month)
+            ->sum('total_amount');
+
+        return view('pages.dashboard', [
+            'salesToday' => $salesToday,
+            'salesYesterday' => $salesYesterday,
+            'salesThisMonth' => $salesThisMonth,
+            'salesLastMonth' => $salesLastMonth,
+        ]);
+    }
     public function index()
     {
         $products = DB::table('products')->get();
@@ -72,7 +97,7 @@ class ProductController extends Controller
         $product = DB::table('products')->where('id', $productId)->first();
         if ($requestedQuantity > $product->quantity) {
             // Quantity exceeds stocked quantity
-            return redirect()->back()->with('error', 'Quantity exceeds stocked quantity.');
+            return redirect('/product')->with('error', 'Quantity exceeds stocked quantity.');
         }
         DB::table('products')->where('id', $productId)->update([
             "quantity" => $product->quantity - $requestedQuantity,
